@@ -1,0 +1,4 @@
+
+*.pem
+
+ansible/inventory/aws_keys

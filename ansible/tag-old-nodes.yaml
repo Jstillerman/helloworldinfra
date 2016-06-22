@@ -2,14 +2,12 @@
 - hosts: all
   gather_facts: false
   sudo: no
-  vars:
-    region: 'us-west-2'
   tasks:
   - name: Get instance ec2 facts
     action: ec2_facts
     register: ec2_facts
-  - name: Add a tag "oldhelloworldapp" to all existing nodes, so we can filter them out later
+  - name: Add a tag "oldhello-world" to all existing nodes, so we can filter them out later
     local_action: ec2_tag resource={{ec2_facts.ansible_facts.ansible_ec2_instance_id}} region='{{ec2_facts.ansible_facts.ansible_ec2_placement_region}}' state=present
     args:
       tags:
-        oldhelloworldapp: true
+        oldhello-world: true
