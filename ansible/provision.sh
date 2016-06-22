@@ -15,13 +15,13 @@ inventory/ec2.py --refresh-cache
 
 # Tag any existing instances as being old
 
-ansible-playbook tag-old-nodes.yaml -u ubuntu --limit tag_Environment_hello_world || true
+ansible-playbook tag-old-nodes.yaml --limit tag_Environment_hello_world || true
 
 
 
 echo "DONE!"
 # Start a new instance
-ansible-playbook immutable.yaml -u ubuntu
+ansible-playbook immutable.yaml
 
 # Ensure the app's cache is up to date
 inventory/ec2.py --refresh-cache
