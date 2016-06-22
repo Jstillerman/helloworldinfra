@@ -1,0 +1,63 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    instance_type: 't2.micro'
+    region: 'us-east-1'
+    aws_zone: 'd'
+  tasks:
+  - name: Launch Instance
+    ec2:
+      image: 'ami-fce3c696' #ubuntu AMI
+      instance_type: "{{ instance_type }}"
+      keypair: 'hello-world'
+      instance_tags:
+        Environment: "hello-world"
+        Class: "hello-world-immutable"
+        Name: "hello-world (immutable)"
+      region: '{{ region }}'
+      aws_zone: '{{ region }}{{ aws_zone }}'
+      group_id: 'sg-577e0e2c'
+      vpc_subnet_id: 'subnet-ab683881'
+      assign_public_ip: 'yes'
+      wait: true
+    register: ec2_info
+
+  - add_host: hostname={{ item.public_ip }} groupname="hello-world,ec2hosts"
+    with_items: ec2_info.instances
+
+  - name: Wait for instances to listen on port 22
+    wait_for:
+      state=started
+      host={{ item.public_dns_name }}
+      port=22
+    with_items: ec2_info.instances
+
+# Run your specific roles that install and configure your application
+- hosts: ec2hosts
+  gather_facts: true
+  sudo: yes
+  roles:
+    - nodesource.node
+    - create-dirs
+    - push-code
+    - nginx
+    - api
+    - restart-services
+    - upgrade-all-packages
+
+- hosts: ec2hosts
+  vars:
+    region: 'us-east-1'
+  tasks:
+  - name: Gather ec2 facts
+    ec2_facts:
+  - debug: var=ansible_ec2_instance_id # You can remove this if you like
+  - name: Add newly created instance to elb
+    local_action:
+      module: ec2_elb
+      region: "{{ region }}"
+      instance_id: "{{ ansible_ec2_instance_id }}"
+      ec2_elbs: "lb-hello-world"
+      state: present

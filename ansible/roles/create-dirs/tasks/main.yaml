@@ -1,0 +1,15 @@
+---
+- name: Create a www-data group
+  group: name=www-data state=present
+
+- name: Create a www-data user
+  user: name=www-data group=www-data state=present
+
+- name: Create application root directory
+  file: dest=/opt/faretext state=directory
+        owner=www-data group=www-data mode=0755
+
+# TODO what user etc should own the logs? It should probably be pm2?
+- name: Create logs directory
+  file: dest=/opt/faretext/logs state=directory
+        owner=www-data group=www-data mode=0777

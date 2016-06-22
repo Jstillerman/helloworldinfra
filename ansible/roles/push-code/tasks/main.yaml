@@ -1,0 +1,7 @@
+---
+- name: Push up code
+  synchronize: src=../../../../HelloWorld/
+               dest=/opt/HelloWorld
+               recursive=yes
+               rsync_opts="--verbose, --exclude ansible --exclude docs --exclude .git --exclude .idea --exclude .DS_Store --exclude .awscredentials --exclude .gitignore --exclude tests"
+               archive=no

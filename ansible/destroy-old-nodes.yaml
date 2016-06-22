@@ -1,0 +1,14 @@
+---
+- name: terminate old instances
+  hosts: all
+  vars:
+    region: 'us-west-2'
+  tasks:
+    - action: ec2_facts
+    - name: terminating old instances
+      local_action:
+        module: ec2
+        state: 'absent'
+        region: '{{ ansible_ec2_placement_region }}'
+        keypair: 'helloworldapp'
+        instance_ids: "{{ ansible_ec2_instance_id }}"

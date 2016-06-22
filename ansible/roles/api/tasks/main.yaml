@@ -1,0 +1,15 @@
+---
+- name: install n (node version installer/switcher)
+  npm: name={{ item }} state=present global=yes
+  with_items:
+  - pm2
+
+- name: Create PM2 user
+  user: name=pm2 system=yes
+
+- name: Copy pm2 process config for the API
+  template: src=helloworldapp.json.j2 dest=/home/pm2/helloworldapp.json
+
+- name: start pm2 process config
+  command: pm2 start /home/pm2/helloworldapp.json
+#  sudo_user: pm2

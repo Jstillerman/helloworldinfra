@@ -1,0 +1,10 @@
+---
+- name: Ensure nginx stable PPA
+  apt_repository: repo='ppa:nginx/stable' update_cache="yes"
+
+- name: Install nginx full
+  apt: name=nginx-full state=installed
+
+- name: Update default site config
+  template: src=default.conf dest=/etc/nginx/sites-available/default
+        owner=root group=root mode=0440

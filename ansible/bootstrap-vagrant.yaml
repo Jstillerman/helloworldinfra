@@ -1,0 +1,10 @@
+---
+- hosts: all
+  sudo: yes
+  roles:
+    - create-dirs
+    - nodesource.node
+    - mongo
+    - api
+    - java
+#    - upgrade-all-packages

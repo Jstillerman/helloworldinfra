@@ -1,0 +1,8 @@
+---
+#- name: Install ansible PPA support
+#  apt: name=python-apt state=installed
+#       update_cache=yes cache_valid_time=600
+
+- name: Upgrade all packages
+  apt: upgrade={{ upgrade_os }}
+  when: upgrade_os is defined
