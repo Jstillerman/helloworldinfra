@@ -14,7 +14,9 @@ ssh-add -l
 inventory/ec2.py --refresh-cache
 
 # Tag any existing instances as being old
-ansible-playbook tag-old-nodes.yaml -u ubuntu #--limit tag_Environment_helloworldapp || true
+
+ansible-playbook tag-old-nodes.yaml -u ubuntu --limit tag_Environment_hello_world || true
+
 
 
 echo "DONE!"
@@ -25,6 +27,8 @@ ansible-playbook immutable.yaml -u ubuntu
 inventory/ec2.py --refresh-cache
 
 # Now terminate any instances with tag "old"
-ansible-playbook destroy-old-nodes.yaml -u ubuntu --limit tag_oldhelloworld_True || true
+
+ansible-playbook destroy-old-nodes.yaml -u ubuntu --limit tag_oldhello_world_True || true
+
 
 echo "site updated"
